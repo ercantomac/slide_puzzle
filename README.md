@@ -1,6 +1,6 @@
-# local_hero_deneme
+# slide_puzzle_by_ercan
 
-A new Flutter project.
+Submission for Flutter Puzzle Hack.
 
 ## Getting Started
 
