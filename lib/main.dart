@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:local_hero_deneme/picselector.dart';
+import 'package:slide_puzzle_by_ercan/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'numbermode.dart';
 

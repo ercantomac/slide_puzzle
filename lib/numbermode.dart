@@ -4,7 +4,6 @@ import 'package:flutter/src/gestures/events.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:local_hero_deneme/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NumberMode extends StatefulWidget {
@@ -984,4 +983,10 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
       ],
     );
   }
+}
+
+class MyRoute extends MaterialPageRoute {
+  MyRoute({dynamic builder}) : super(builder: builder);
+  @override
+  Duration get transitionDuration => const Duration(seconds: 1);
 }
