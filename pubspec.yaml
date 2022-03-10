@@ -13,8 +13,6 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.0.12
   just_audio: ^0.9.20
-  #image: ^3.1.1
-  #file_picker: ^4.3.3
 
 dev_dependencies:
   flutter_lints: ^1.0.4

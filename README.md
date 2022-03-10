@@ -1,6 +1,8 @@
-# local_hero_deneme
+# slide_puzzle_by_ercan
 
-A new Flutter project.
+Submission for Flutter Puzzle Hack.
+
+## Working Demo: https://objective-haibt-b724bd.netlify.app/
 
 ## Getting Started
 
