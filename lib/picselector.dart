@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle_by_ercan/picturemode.dart';
 import 'package:shared_preferences/shared_preferences.dart';

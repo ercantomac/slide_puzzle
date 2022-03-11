@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slide_puzzle_by_ercan/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'numbermode.dart';
+import 'package:slide_puzzle_by_ercan/numbermode.dart';
 
 void main() {
   Paint.enableDithering = true;

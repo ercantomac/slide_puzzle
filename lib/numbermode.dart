@@ -385,7 +385,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         //GAME FINISHED
         await _player.setAsset('assets/Choir Harp Bless.wav');
         _timer.cancel();
-        Timer(const Duration(milliseconds: 800), () {
+        Timer(const Duration(seconds: 1), () async {
           _player.play();
           HapticFeedback.heavyImpact();
           for (int i = 0; i < 4; i++) {
@@ -395,135 +395,141 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
               _margins[i][j].notifyListeners();
             }
           }
-          Timer(const Duration(milliseconds: 600), () {
-            setState(() {
-              _opacity = 0.00001;
-            });
-            Timer(const Duration(milliseconds: 200), () {
+          Timer(const Duration(milliseconds: 800), () async {
+            for (int i = 0; i < 4; i++) {
+              for (int j = 0; j < _margins[i].length; j++) {
+                await Future.delayed(const Duration(milliseconds: 60), () {
+                  _hoverSize[i][j].value = 1.25;
+                  Timer(const Duration(milliseconds: 400), () async {
+                    _hoverSize[i][j].value = 1.0;
+                  });
+                });
+              }
+              await Future.delayed(const Duration(milliseconds: 240), () {});
+            }
+            Timer(const Duration(milliseconds: 500), () {
               for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < _margins[i].length; j++) {
-                  _margins[i][j].value[0] = 0;
-                  _margins[i][j].value[1] = 0;
+                  _margins[i][j].value[0] = _margins[i][j].value[0] ~/ 1.2;
+                  _margins[i][j].value[1] = _margins[i][j].value[1] ~/ 1.2;
                   _margins[i][j].notifyListeners();
                 }
               }
-            });
-          });
-          Timer(const Duration(milliseconds: 1500), () {
-            double radius = (_size / 40);
-            setState(() {
-              _size = 0;
-              _movement = 0;
-            });
-            Timer(const Duration(milliseconds: 200), () {
-              showGeneralDialog(
-                pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
-                  return WillPopScope(
-                    onWillPop: () async {
-                      Navigator.of(context).popUntil((Route route) => route.isFirst);
-                      return true;
-                    },
-                    child: AlertDialog(
-                      backgroundColor: _colors[_colorCnt],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(radius)),
-                      ),
-                      title: (_moveCnt.value < _bestScore)
-                          ? const Text(
-                              'Congratulations! New best score!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20.0),
-                            )
-                          : const Text(
-                              'Congratulations!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20.0),
-                            ),
-                      content: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Text>[
-                            (_moveCnt.value < _bestScore)
-                                ? const Text(
-                                    'You solved the puzzle with a new record!\n',
-                                    style: TextStyle(fontSize: 20.0),
-                                  )
-                                : const Text(
-                                    'You solved the puzzle!\n',
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                            Text(
-                              'Score: ${_moveCnt.value} moves.\n',
-                              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
-                            ),
-                            (_bestScore == -1)
-                                ? const Text(
-                                    'No best score.\n',
-                                    style: TextStyle(fontSize: 20.0),
-                                  )
-                                : Text(
-                                    'Best score: $_bestScore moves.\n',
-                                    style: const TextStyle(fontSize: 20.0),
-                                  ),
-                          ],
+              Timer(const Duration(milliseconds: 800), () {
+                double radius = (_size / 40);
+                /*setState(() {
+                  _size = 0;
+                  _movement = 0;
+                });*/
+                showGeneralDialog(
+                  pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
+                    return WillPopScope(
+                      onWillPop: () async {
+                        Navigator.of(context).popUntil((Route route) => route.isFirst);
+                        return true;
+                      },
+                      child: AlertDialog(
+                        backgroundColor: _colors[_colorCnt],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(radius)),
                         ),
-                      ),
-                      actions: <Widget>[
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <TextButton>[
-                              TextButton(
-                                  onPressed: () => Navigator.of(context).popUntil((Route route) => route.isFirst),
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.black38,
-                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
-                                  ),
-                                  child: const Text(
-                                    'QUIT',
-                                    style: TextStyle(fontFamily: 'Manrope'),
-                                  )),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Timer(const Duration(milliseconds: 500), () {
-                                      Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const NumberMode()));
-                                    });
-                                  },
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.black38,
-                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
-                                  ),
-                                  child: const Text(
-                                    'PLAY AGAIN',
-                                    style: TextStyle(fontFamily: 'Manrope'),
-                                  )),
+                        title: (_moveCnt.value < _bestScore)
+                            ? const Text(
+                                'Congratulations! New best score!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 20.0),
+                              )
+                            : const Text(
+                                'Congratulations!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 20.0),
+                              ),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Text>[
+                              (_moveCnt.value < _bestScore)
+                                  ? const Text(
+                                      'You solved the puzzle with a new record!\n',
+                                      style: TextStyle(fontSize: 20.0),
+                                    )
+                                  : const Text(
+                                      'You solved the puzzle!\n',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                              Text(
+                                'Score: ${_moveCnt.value} moves.\n',
+                                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                              ),
+                              (_bestScore == -1)
+                                  ? const Text(
+                                      'No best score.\n',
+                                      style: TextStyle(fontSize: 20.0),
+                                    )
+                                  : Text(
+                                      'Best score: $_bestScore moves.\n',
+                                      style: const TextStyle(fontSize: 20.0),
+                                    ),
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-                context: context,
-                useRootNavigator: true,
-                transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
-                  return FadeTransition(
-                    opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
-                    child: ScaleTransition(
-                      scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
-                      alignment: Alignment.bottomCenter,
-                      child: child,
-                    ),
-                  );
-                },
-                transitionDuration: const Duration(milliseconds: 600),
-              );
-              if (_moveCnt.value < _bestScore || _bestScore == -1) {
-                _sp.setInt('_bestScore', _moveCnt.value);
-              }
+                        ),
+                        actions: <Widget>[
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <TextButton>[
+                                TextButton(
+                                    onPressed: () => Navigator.of(context).popUntil((Route route) => route.isFirst),
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.white,
+                                      backgroundColor: Colors.black38,
+                                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                                    ),
+                                    child: const Text(
+                                      'QUIT',
+                                      style: TextStyle(fontFamily: 'Manrope'),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Timer(const Duration(milliseconds: 500), () {
+                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const NumberMode()));
+                                      });
+                                    },
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.white,
+                                      backgroundColor: Colors.black38,
+                                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                                    ),
+                                    child: const Text(
+                                      'PLAY AGAIN',
+                                      style: TextStyle(fontFamily: 'Manrope'),
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  context: context,
+                  useRootNavigator: true,
+                  transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
+                    return FadeTransition(
+                      opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
+                      child: ScaleTransition(
+                        scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
+                        alignment: Alignment.bottomCenter,
+                        child: child,
+                      ),
+                    );
+                  },
+                  transitionDuration: const Duration(milliseconds: 600),
+                );
+                if (_moveCnt.value < _bestScore || _bestScore == -1) {
+                  _sp.setInt('_bestScore', _moveCnt.value);
+                }
+              });
             });
           });
         });
@@ -899,7 +905,9 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                           builder: (BuildContext context, List<int> value, Widget? child) {
                                             return AnimatedContainer(
                                               duration: const Duration(seconds: 1),
-                                              curve: (_centerSquareDimension == 0) ? Curves.fastLinearToSlowEaseIn : Curves.linearToEaseOut,
+                                              curve: (_centerSquareDimension == 0 && _inPosition.value != 15)
+                                                  ? Curves.fastLinearToSlowEaseIn
+                                                  : Curves.linearToEaseOut,
                                               width: _squareDimension,
                                               height: _squareDimension,
                                               decoration: BoxDecoration(
@@ -916,7 +924,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                           },
                                           child: MouseRegion(
                                             onEnter: (PointerEnterEvent event) {
-                                              _hoverSize[i][j].value = 1.15;
+                                              _hoverSize[i][j].value = /*1.15*/ 1.25;
                                             },
                                             onExit: (PointerExitEvent event) {
                                               _hoverSize[i][j].value = 1.0;
