@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,10 +59,12 @@ class _MyAppState extends State<MyApp> {
       home: Builder(builder: (BuildContext context) {
         return Scaffold(
           backgroundColor: Colors.grey.shade900,
-          extendBodyBehindAppBar: true,
+          //extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
+            title: const Text('SLIDE PUZZLE'),
+            centerTitle: true,
             systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
               statusBarColor: Colors.transparent,
               systemNavigationBarColor: Colors.transparent,
@@ -80,16 +82,18 @@ class _MyAppState extends State<MyApp> {
                       curve: Curves.easeInOutCubic,
                       margin: value,
                       decoration: ShapeDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0))
+                            ? /*Colors.white.withOpacity(0.008)*/ Colors.black.withOpacity(0.05)
+                            : Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                          side: BorderSide(color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? Colors.transparent : Colors.white30),
+                          borderRadius: BorderRadius.all(Radius.circular((value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? 12.0 : 24.0)),
+                          side: BorderSide(color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? Colors.white12 : Colors.transparent),
+                          //side: BorderSide(color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? Colors.transparent : Colors.white30),
                         ),
                       ),
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                         onTap: () {
-                          document.documentElement?.requestFullscreen();
                           Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const NumberMode())).then((value) {
                             SharedPreferences.getInstance().then((SharedPreferences _sp) {
                               if (_sp.getInt('_bestScore') != null) {
@@ -98,6 +102,7 @@ class _MyAppState extends State<MyApp> {
                               setState(() {});
                             });
                           });
+                          //document.documentElement?.requestFullscreen();
                         },
                         onHover: (bool a) {
                           if (a) {
@@ -161,10 +166,13 @@ class _MyAppState extends State<MyApp> {
                       curve: Curves.easeInOutCubic,
                       margin: value,
                       decoration: ShapeDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0))
+                            ? /*Colors.white.withOpacity(0.008)*/ Colors.black.withOpacity(0.05)
+                            : Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                          side: BorderSide(color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? Colors.transparent : Colors.white30),
+                          borderRadius: BorderRadius.all(Radius.circular((value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? 12.0 : 24.0)),
+                          side: BorderSide(color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? Colors.white12 : Colors.transparent),
+                          //side: BorderSide(color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? Colors.transparent : Colors.white30),
                         ),
                       ),
                       child: InkWell(

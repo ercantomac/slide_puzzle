@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle_by_ercan/picturemode.dart';
@@ -63,7 +63,6 @@ class _PicSelectorState extends State<PicSelector> {
                   highlightColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   onTap: () {
-                    document.documentElement?.requestFullscreen();
                     Navigator.of(context).push(MyRoute(builder: (BuildContext context) => PictureMode(i))).then((value) {
                       SharedPreferences.getInstance().then((SharedPreferences _sp) {
                         for (int i = 0; i < 4; i++) {
@@ -74,6 +73,7 @@ class _PicSelectorState extends State<PicSelector> {
                         setState(() {});
                       });
                     });
+                    //document.documentElement?.requestFullscreen();
                   },
                   child: Stack(
                     children: <Widget>[

@@ -1,4 +1,4 @@
-package com.example.local_hero_deneme
+package com.slidepuzzle.slidepuzzle
 
 import io.flutter.embedding.android.FlutterActivity
 

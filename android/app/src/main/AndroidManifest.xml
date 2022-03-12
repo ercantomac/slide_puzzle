@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.local_hero_deneme">
+    package="com.slidepuzzle.slidepuzzle">
    <application
         android:label="Slide Puzzle by Ercan"
         android:name="${applicationName}"

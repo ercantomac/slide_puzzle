@@ -396,18 +396,30 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
             }
           }
           Timer(const Duration(milliseconds: 800), () async {
-            for (int i = 0; i < 4; i++) {
-              for (int j = 0; j < _margins[i].length; j++) {
-                await Future.delayed(const Duration(milliseconds: 60), () {
-                  _hoverSize[i][j].value = 1.25;
-                  Timer(const Duration(milliseconds: 400), () async {
-                    _hoverSize[i][j].value = 1.0;
-                  });
-                });
+            for (int k = 1; k < 16; k++) {
+              int cnt = 0;
+              for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < _margins[i].length; j++) {
+                  if (_items[i][j] == k) {
+                    cnt++;
+                    await Future.delayed(const Duration(milliseconds: 30), () {
+                      _hoverSize[i][j].value = 1.25;
+                      Timer(const Duration(milliseconds: 550), () async {
+                        _hoverSize[i][j].value = 1.0;
+                      });
+                    });
+                    break;
+                  }
+                }
+                if (cnt != 0) {
+                  break;
+                }
               }
-              await Future.delayed(const Duration(milliseconds: 240), () {});
+              if ((k % 4) == 0) {
+                await Future.delayed(const Duration(milliseconds: 160), () {});
+              }
             }
-            Timer(const Duration(milliseconds: 500), () {
+            Timer(const Duration(milliseconds: /*500*/ 800), () {
               for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < _margins[i].length; j++) {
                   _margins[i][j].value[0] = _margins[i][j].value[0] ~/ 1.2;
@@ -711,6 +723,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                     width: (_textFontSize * 1.2),
                     height: (_textFontSize * 1.2),
                     child: FloatingActionButton(
+                      heroTag: null,
                       onPressed: () => _changeColor(),
                       /*backgroundColor: _colors[_colorCnt],
                       foregroundColor: _medium,*/
@@ -767,6 +780,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                     width: (_textFontSize * 1.2),
                     height: (_textFontSize * 1.2),
                     child: FloatingActionButton(
+                      heroTag: null,
                       onPressed: () {
                         _timer.cancel();
                         showGeneralDialog(
@@ -934,8 +948,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                                   valueListenable: _hoverSize[i][j],
                                                   builder: (BuildContext context, double value, Widget? child) {
                                                     return AnimatedScale(
-                                                      duration: const Duration(milliseconds: 400),
-                                                      curve: Curves.linearToEaseOut,
+                                                      duration: const Duration(milliseconds: 300),
+                                                      curve: (_inPosition.value != 15) ? Curves.linearToEaseOut : Curves.easeInOut,
                                                       scale: value,
                                                       child: Text(
                                                         '${_items[i][j]}',
