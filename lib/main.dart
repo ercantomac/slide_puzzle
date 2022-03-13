@@ -1,4 +1,4 @@
-//import 'dart:html';
+import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
                               setState(() {});
                             });
                           });
-                          //document.documentElement?.requestFullscreen();
+                          document.documentElement?.requestFullscreen();
                         },
                         onHover: (bool a) {
                           if (a) {

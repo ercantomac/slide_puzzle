@@ -53582,7 +53582,9 @@ o=A.rZ(A.a([A.a9h(B.KE,B.cX,B.aC,A.d3(n,n,B.h,n,n,n,n,n,"Manrope",n,n,p*q/16,n,n
 return A.A0(A.tY(!1,B.k5,!0,A.i0(B.C,A.a([o,A.Vp(12,new A.fh(B.aY,n,n,A.eg("Best score: "+A.h(r.gBR()===-1?"-":r.gBR()),n,n,n),n),n,n,n,n,n,n)],t.p),B.I,B.aq),n,!0,n,n,n,n,n,n,n,new A.a3f(r),n,new A.a3g(r,a),n,n,n),B.cX,new A.dS(m,n,n,n,new A.bB(l,new A.bZ(s,1,B.a2))),B.aC,n,b,n,n,n)},
 $S:125}
 A.a3g.prototype={
-$0(){A.bU(this.b,!1).k_(A.aee(new A.a3b())).aP(0,new A.a3c(this.a),t.P)},
+$0(){A.bU(this.b,!1).k_(A.aee(new A.a3b())).aP(0,new A.a3c(this.a),t.P)
+var s=document.documentElement
+if(s!=null)s.webkitRequestFullscreen()},
 $S:0}
 A.a3b.prototype={
 $1(a){return B.qo},
@@ -54432,7 +54434,9 @@ $0(){},
 $S:0}
 A.a4t.prototype={
 $0(){var s=null,r=A.bU(this.b,!1),q=A.a([],t.Zt),p=$.T,o=t.l,n=t.zh,m=A.j3(B.aA),l=A.a([],t.G),k=A.R(0,s,!1,t.Z),j=$.T
-r.k_(new A.Dg(new A.a4q(this.c),!1,s,q,new A.b8(s,t.Ts),new A.b8(s,t.A),new A.k8(),s,new A.aC(new A.a1(p,o),n),m,l,B.br,new A.ad(s,k,t.XR),new A.aC(new A.a1(j,o),n))).aP(0,new A.a4r(this.a),t.P)},
+r.k_(new A.Dg(new A.a4q(this.c),!1,s,q,new A.b8(s,t.Ts),new A.b8(s,t.A),new A.k8(),s,new A.aC(new A.a1(p,o),n),m,l,B.br,new A.ad(s,k,t.XR),new A.aC(new A.a1(j,o),n))).aP(0,new A.a4r(this.a),t.P)
+r=document.documentElement
+if(r!=null)r.webkitRequestFullscreen()},
 $S:0}
 A.a4q.prototype={
 $1(a){return new A.ka(this.a,null)},

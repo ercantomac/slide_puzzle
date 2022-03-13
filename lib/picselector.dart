@@ -1,4 +1,4 @@
-//import 'dart:html';
+import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle_by_ercan/picturemode.dart';
@@ -73,7 +73,7 @@ class _PicSelectorState extends State<PicSelector> {
                         setState(() {});
                       });
                     });
-                    //document.documentElement?.requestFullscreen();
+                    document.documentElement?.requestFullscreen();
                   },
                   child: Stack(
                     children: <Widget>[
