@@ -53843,69 +53843,73 @@ else if(J.e(J.n(J.n(c[a],b).a,1),q.gjm()))n=1
 else{if(J.e(J.n(J.n(c[a],b).a,1),q.gjm()*2))o=2
 else o=J.e(J.n(J.n(c[a],b).a,1),q.gjm()*3)?3:-1
 n=o}o=q.k1
-s=p===o[1]||n===o[0]?2:4
+m=o[1]
+s=p===m||n===o[0]?2:4
 break
-case 2:for(m=q.k3,l=0,k=0;k<4;++k)for(j=0;j<m[k].length;++j){if(J.e(J.n(J.n(c[k],j).a,0),0))i=0
-else{h=J.n(J.n(c[k],j).a,0)
+case 2:l=[o[0],m]
+o[0]=n
+o[1]=p
+for(o=q.k3,k=0,j=0;j<4;++j)for(i=0;i<o[j].length;++i){if(J.e(J.n(J.n(c[j],i).a,0),0))h=0
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-if(J.e(h,g===$?q.z=160:g))i=1
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,g===$?q.z=160:g))h=1
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-if(J.e(h,(g===$?q.z=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,(g===$?q.z=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-h=J.e(h,(g===$?q.z=160:g)*3)?3:-1}i=h}}if(J.e(J.n(J.n(c[k],j).a,1),0))f=0
-else{h=J.n(J.n(c[k],j).a,1)
+m=J.e(m,(g===$?q.z=160:g)*3)?3:-1}h=m}}if(J.e(J.n(J.n(c[j],i).a,1),0))f=0
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-if(J.e(h,g===$?q.z=160:g))f=1
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,g===$?q.z=160:g))f=1
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-if(J.e(h,(g===$?q.z=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,(g===$?q.z=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-h=J.e(h,(g===$?q.z=160:g)*3)?3:-1}f=h}}h=o[1]
-if(p===h){h=o[0]
-if(n<h){if(i===p&&f<=h&&f>=n){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,1)
+m=J.e(m,(g===$?q.z=160:g)*3)?3:-1}f=m}}m=l[1]
+if(p===m){m=l[0]
+if(n<m){if(h===p&&f<=m&&f>=n){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,1)
 g=q.z
-e.l(h,1,d+(g===$?q.z=160:g))
-J.n(c[k],j).ag()}}else if(i===p&&f>=h&&f<=n){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,1)
+e.l(m,1,d+(g===$?q.z=160:g))
+J.n(c[j],i).ag()}}else if(h===p&&f>=m&&f<=n){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,1)
 g=q.z
-e.l(h,1,d-(g===$?q.z=160:g))
-J.n(c[k],j).ag()}}else if(n===o[0])if(p<h){if(f===n&&i<=h&&i>=p){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,0)
+e.l(m,1,d-(g===$?q.z=160:g))
+J.n(c[j],i).ag()}}else if(n===l[0])if(p<m){if(f===n&&h<=m&&h>=p){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,0)
 g=q.z
-e.l(h,0,d+(g===$?q.z=160:g))
-J.n(c[k],j).ag()}}else if(f===n&&i>=h&&i<=p){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,0)
+e.l(m,0,d+(g===$?q.z=160:g))
+J.n(c[j],i).ag()}}else if(f===n&&h>=m&&h<=p){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,0)
 g=q.z
-e.l(h,0,d-(g===$?q.z=160:g))
-J.n(c[k],j).ag()}if(J.e(J.n(J.n(c[k],j).a,0),0))i=0
-else{h=J.n(J.n(c[k],j).a,0)
+e.l(m,0,d-(g===$?q.z=160:g))
+J.n(c[j],i).ag()}if(J.e(J.n(J.n(c[j],i).a,0),0))h=0
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-if(J.e(h,g===$?q.z=160:g))i=1
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,g===$?q.z=160:g))h=1
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-if(J.e(h,(g===$?q.z=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,(g===$?q.z=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.z
-h=J.e(h,(g===$?q.z=160:g)*3)?3:-1}i=h}}if(J.e(J.n(J.n(c[k],j).a,1),0))f=0
-else{h=J.n(J.n(c[k],j).a,1)
+m=J.e(m,(g===$?q.z=160:g)*3)?3:-1}h=m}}if(J.e(J.n(J.n(c[j],i).a,1),0))f=0
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-if(J.e(h,g===$?q.z=160:g))f=1
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,g===$?q.z=160:g))f=1
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-if(J.e(h,(g===$?q.z=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,(g===$?q.z=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.z
-h=J.e(h,(g===$?q.z=160:g)*3)?3:-1}f=h}}if(i+1+f*4===m[k][j])++l}q.cy.sm(0,l)
+m=J.e(m,(g===$?q.z=160:g)*3)?3:-1}f=m}}if(h+1+f*4===o[j][i])++k}q.cy.sm(0,k)
 c=q.rx
-s=l===15?5:7
+s=k===15?5:7
 break
 case 5:s=8
 return A.H(c.fp("assets/Choir Harp Bless.wav"),$async$kL)
@@ -53916,9 +53920,7 @@ break
 case 7:s=9
 return A.H(c.fp("assets/Tile Move.wav"),$async$kL)
 case 9:c.c0(0)
-case 6:o[0]=n
-o[1]=p
-c=q.cx
+case 6:c=q.cx
 c.sm(0,c.a+1)
 s=3
 break
@@ -54554,69 +54556,73 @@ else if(J.e(J.n(J.n(c[a],b).a,1),q.gev()))n=1
 else{if(J.e(J.n(J.n(c[a],b).a,1),q.gev()*2))o=2
 else o=J.e(J.n(J.n(c[a],b).a,1),q.gev()*3)?3:-1
 n=o}o=q.dx
-s=p===o[1]||n===o[0]?2:4
+m=o[1]
+s=p===m||n===o[0]?2:4
 break
-case 2:for(m=q.fr,l=0,k=0;k<4;++k)for(j=0;j<m[k].length;++j){if(J.e(J.n(J.n(c[k],j).a,0),0))i=0
-else{h=J.n(J.n(c[k],j).a,0)
+case 2:l=[o[0],m]
+o[0]=n
+o[1]=p
+for(o=q.fr,k=0,j=0;j<4;++j)for(i=0;i<o[j].length;++i){if(J.e(J.n(J.n(c[j],i).a,0),0))h=0
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-if(J.e(h,g===$?q.r=160:g))i=1
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,g===$?q.r=160:g))h=1
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-if(J.e(h,(g===$?q.r=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,(g===$?q.r=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-h=J.e(h,(g===$?q.r=160:g)*3)?3:-1}i=h}}if(J.e(J.n(J.n(c[k],j).a,1),0))f=0
-else{h=J.n(J.n(c[k],j).a,1)
+m=J.e(m,(g===$?q.r=160:g)*3)?3:-1}h=m}}if(J.e(J.n(J.n(c[j],i).a,1),0))f=0
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-if(J.e(h,g===$?q.r=160:g))f=1
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,g===$?q.r=160:g))f=1
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-if(J.e(h,(g===$?q.r=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,(g===$?q.r=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-h=J.e(h,(g===$?q.r=160:g)*3)?3:-1}f=h}}h=o[1]
-if(p===h){h=o[0]
-if(n<h){if(i===p&&f<=h&&f>=n){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,1)
+m=J.e(m,(g===$?q.r=160:g)*3)?3:-1}f=m}}m=l[1]
+if(p===m){m=l[0]
+if(n<m){if(h===p&&f<=m&&f>=n){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,1)
 g=q.r
-e.l(h,1,d+(g===$?q.r=160:g))
-J.n(c[k],j).ag()}}else if(i===p&&f>=h&&f<=n){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,1)
+e.l(m,1,d+(g===$?q.r=160:g))
+J.n(c[j],i).ag()}}else if(h===p&&f>=m&&f<=n){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,1)
 g=q.r
-e.l(h,1,d-(g===$?q.r=160:g))
-J.n(c[k],j).ag()}}else if(n===o[0])if(p<h){if(f===n&&i<=h&&i>=p){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,0)
+e.l(m,1,d-(g===$?q.r=160:g))
+J.n(c[j],i).ag()}}else if(n===l[0])if(p<m){if(f===n&&h<=m&&h>=p){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,0)
 g=q.r
-e.l(h,0,d+(g===$?q.r=160:g))
-J.n(c[k],j).ag()}}else if(f===n&&i>=h&&i<=p){h=J.n(c[k],j).a
-e=J.ae(h)
-d=e.h(h,0)
+e.l(m,0,d+(g===$?q.r=160:g))
+J.n(c[j],i).ag()}}else if(f===n&&h>=m&&h<=p){m=J.n(c[j],i).a
+e=J.ae(m)
+d=e.h(m,0)
 g=q.r
-e.l(h,0,d-(g===$?q.r=160:g))
-J.n(c[k],j).ag()}if(J.e(J.n(J.n(c[k],j).a,0),0))i=0
-else{h=J.n(J.n(c[k],j).a,0)
+e.l(m,0,d-(g===$?q.r=160:g))
+J.n(c[j],i).ag()}if(J.e(J.n(J.n(c[j],i).a,0),0))h=0
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-if(J.e(h,g===$?q.r=160:g))i=1
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,g===$?q.r=160:g))h=1
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-if(J.e(h,(g===$?q.r=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,0)
+if(J.e(m,(g===$?q.r=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,0)
 g=q.r
-h=J.e(h,(g===$?q.r=160:g)*3)?3:-1}i=h}}if(J.e(J.n(J.n(c[k],j).a,1),0))f=0
-else{h=J.n(J.n(c[k],j).a,1)
+m=J.e(m,(g===$?q.r=160:g)*3)?3:-1}h=m}}if(J.e(J.n(J.n(c[j],i).a,1),0))f=0
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-if(J.e(h,g===$?q.r=160:g))f=1
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,g===$?q.r=160:g))f=1
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-if(J.e(h,(g===$?q.r=160:g)*2))h=2
-else{h=J.n(J.n(c[k],j).a,1)
+if(J.e(m,(g===$?q.r=160:g)*2))m=2
+else{m=J.n(J.n(c[j],i).a,1)
 g=q.r
-h=J.e(h,(g===$?q.r=160:g)*3)?3:-1}f=h}}if(i+1+f*4===m[k][j])++l}q.Q.sm(0,l)
+m=J.e(m,(g===$?q.r=160:g)*3)?3:-1}f=m}}if(h+1+f*4===o[j][i])++k}q.Q.sm(0,k)
 c=q.k1
-s=l===15?5:7
+s=k===15?5:7
 break
 case 5:s=8
 return A.H(c.fp("assets/Choir Harp Bless.wav"),$async$kS)
@@ -54627,9 +54633,7 @@ break
 case 7:s=9
 return A.H(c.fp("assets/Tile Move.wav"),$async$kS)
 case 9:c.c0(0)
-case 6:o[0]=n
-o[1]=p
-c=q.z
+case 6:c=q.z
 c.sm(0,c.a+1)
 s=3
 break

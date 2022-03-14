@@ -21,9 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final ValueNotifier<EdgeInsetsGeometry> _margin1 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0));
-
   final ValueNotifier<EdgeInsetsGeometry> _margin2 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 16.0));
-
   late int _bestScore = -1;
 
   @override
@@ -59,7 +57,6 @@ class _MyAppState extends State<MyApp> {
       home: Builder(builder: (BuildContext context) {
         return Scaffold(
           backgroundColor: Colors.grey.shade900,
-          //extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
@@ -82,9 +79,7 @@ class _MyAppState extends State<MyApp> {
                       curve: Curves.easeInOutCubic,
                       margin: value,
                       decoration: ShapeDecoration(
-                        color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0))
-                            ? /*Colors.white.withOpacity(0.008)*/ Colors.black.withOpacity(0.05)
-                            : Colors.white.withOpacity(0.05),
+                        color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular((value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? 12.0 : 24.0)),
                           side: BorderSide(color: (value == const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0)) ? Colors.white12 : Colors.transparent),
@@ -166,9 +161,7 @@ class _MyAppState extends State<MyApp> {
                       curve: Curves.easeInOutCubic,
                       margin: value,
                       decoration: ShapeDecoration(
-                        color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0))
-                            ? /*Colors.white.withOpacity(0.008)*/ Colors.black.withOpacity(0.05)
-                            : Colors.white.withOpacity(0.05),
+                        color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular((value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? 12.0 : 24.0)),
                           side: BorderSide(color: (value == const EdgeInsets.fromLTRB(24.0, 48.0, 48.0, 48.0)) ? Colors.white12 : Colors.transparent),

@@ -12,7 +12,6 @@ class MyRoute extends MaterialPageRoute {
 
 class PicSelector extends StatefulWidget {
   const PicSelector({Key? key}) : super(key: key);
-
   @override
   _PicSelectorState createState() => _PicSelectorState();
 }

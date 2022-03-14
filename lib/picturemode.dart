@@ -227,6 +227,9 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                         ? 3
                         : -1;
     if (actualCol == _blankPosition[1] || actualRow == _blankPosition[0]) {
+      List<int> oldBlankPosition = <int>[_blankPosition[0], _blankPosition[1]];
+      _blankPosition[0] = actualRow;
+      _blankPosition[1] = actualCol;
       int cnt = 0;
       for (int i = 0; i < _items.length; i++) {
         for (int j = 0; j < _items[i].length; j++) {
@@ -248,32 +251,32 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                       : (_margins[i][j].value[1] == (_movement * 3))
                           ? 3
                           : -1;
-          if (actualCol == _blankPosition[1]) {
+          if (actualCol == oldBlankPosition[1]) {
             // SAME COLUMN
-            if (actualRow < _blankPosition[0]) {
+            if (actualRow < oldBlankPosition[0]) {
               // SLIDE TO BOTTOM
-              if (_column == actualCol && _row <= _blankPosition[0] && _row >= actualRow) {
+              if (_column == actualCol && _row <= oldBlankPosition[0] && _row >= actualRow) {
                 _margins[i][j].value[1] += _movement;
                 _margins[i][j].notifyListeners();
               }
             } else {
               // SLIDE TO TOP
-              if (_column == actualCol && _row >= _blankPosition[0] && _row <= actualRow) {
+              if (_column == actualCol && _row >= oldBlankPosition[0] && _row <= actualRow) {
                 _margins[i][j].value[1] -= _movement;
                 _margins[i][j].notifyListeners();
               }
             }
-          } else if (actualRow == _blankPosition[0]) {
+          } else if (actualRow == oldBlankPosition[0]) {
             // SAME ROW
-            if (actualCol < _blankPosition[1]) {
+            if (actualCol < oldBlankPosition[1]) {
               // SLIDE TO RIGHT
-              if (_row == actualRow && _column <= _blankPosition[1] && _column >= actualCol) {
+              if (_row == actualRow && _column <= oldBlankPosition[1] && _column >= actualCol) {
                 _margins[i][j].value[0] += _movement;
                 _margins[i][j].notifyListeners();
               }
             } else {
               // SLIDE TO LEFT
-              if (_row == actualRow && _column >= _blankPosition[1] && _column <= actualCol) {
+              if (_row == actualRow && _column >= oldBlankPosition[1] && _column <= actualCol) {
                 _margins[i][j].value[0] -= _movement;
                 _margins[i][j].notifyListeners();
               }
@@ -459,8 +462,6 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
         await _player.setAsset('assets/Tile Move.wav');
         _player.play();
       }
-      _blankPosition[0] = actualRow;
-      _blankPosition[1] = actualCol;
       _moveCnt.value++;
     } else {
       await _player.setAsset('assets/Not Movable.wav');
@@ -565,7 +566,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
               title: ValueListenableBuilder<int>(
                 valueListenable: _moveCnt,
                 builder: (BuildContext context, int value, Widget? child) {
-                  return Text('MOVES: $value', style: TextStyle(/*fontSize: 32.0*/ fontSize: _size / 24));
+                  return Text('MOVES: $value', style: TextStyle(fontSize: _size / 24));
                 },
               ),
               bottom: PreferredSize(
@@ -573,8 +574,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                   child: ValueListenableBuilder<int>(
                       valueListenable: _inPosition,
                       builder: (BuildContext context, int value, Widget? child) {
-                        return Text('IN POSITION: $value',
-                            style: TextStyle(/*fontSize: 16.0,*/ fontSize: _size / 33.6, color: Colors.white, fontFamily: 'Manrope'));
+                        return Text('IN POSITION: $value', style: TextStyle(fontSize: _size / 33.6, color: Colors.white, fontFamily: 'Manrope'));
                       })),
               centerTitle: true,
               elevation: 0.0,
@@ -599,7 +599,6 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                       ),
                       SizedBox(
                         width: _size / (9.23),
-                        //width: _size / 8,
                         height: _size / 18,
                         child: Center(
                           child: StreamBuilder<int>(
@@ -623,11 +622,6 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                           ),
                         ),
                       ),
-                      /*Icon(
-                        Icons.timer_outlined,
-                        color: Colors.transparent,
-                        size: _size / 24,
-                      ),*/
                     ],
                   ),
                 ),
@@ -754,7 +748,6 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                           ),
                           /*shadows: <BoxShadow>[
                             /*BoxShadow(
-                              //color: Colors.white.withOpacity(0.16),
                               color: Colors.white12,
                               offset: Offset(-_size / 120, -_size / 120),
                               blurRadius: _size / 20,
@@ -764,7 +757,6 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                               color: Colors.black.withOpacity(0.6),
                               offset: Offset(_size / 45, _size / 45),
                               blurRadius: _size / 26.7,
-                              //blurStyle: BlurStyle.outer,
                             ),
                           ],*/
                         ),
@@ -826,7 +818,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                 height: (_movement / 1.33).toDouble(),
                 margin: (_originalImgAlignment == Alignment.topRight) ? EdgeInsets.fromLTRB(0.0, (_size / 15), (_size / 40), 0.0) : EdgeInsets.zero,
                 transformAlignment: Alignment.center,
-                transform: Matrix4.identity()..scale((_originalImgAlignment == Alignment.topRight) ? 1.0 : /*4.0*/ 5.33),
+                transform: Matrix4.identity()..scale((_originalImgAlignment == Alignment.topRight) ? 1.0 : 5.33),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(_radius / 2)),
                   boxShadow: <BoxShadow>[
