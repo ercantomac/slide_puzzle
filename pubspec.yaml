@@ -3,7 +3,7 @@ description: Submission for Flutter Puzzle Hack.
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.2+3
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.4
   shared_preferences: ^2.0.12
   just_audio: ^0.9.20
 

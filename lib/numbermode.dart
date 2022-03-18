@@ -25,7 +25,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         Colors.pinkAccent.shade400,
         Colors.purpleAccent.shade400,
         Colors.greenAccent.shade400,
-        Colors.pink.shade400,
+        //Colors.pink.shade400,
+        Colors.tealAccent.shade400,
         const Color(0xFFFF9100)
       ],
       _secondaryColors = <Color>[
@@ -36,7 +37,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         HSLColor.fromColor(Colors.pinkAccent.shade400).withLightness(HSLColor.fromColor(Colors.pinkAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(Colors.purpleAccent.shade400).withLightness(HSLColor.fromColor(Colors.purpleAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(Colors.greenAccent.shade400).withLightness(HSLColor.fromColor(Colors.greenAccent.shade400).lightness * (0.85)).toColor(),
-        HSLColor.fromColor(Colors.pinkAccent.shade400).withLightness(HSLColor.fromColor(Colors.pinkAccent.shade400).lightness * (0.85)).toColor(),
+        //HSLColor.fromColor(Colors.pink.shade400).withLightness(HSLColor.fromColor(Colors.pink.shade400).lightness * (0.85)).toColor(),
+        HSLColor.fromColor(Colors.tealAccent.shade400).withLightness(HSLColor.fromColor(Colors.tealAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(const Color(0xFFFF9100)).withLightness(HSLColor.fromColor(const Color(0xFFFF9100)).lightness * (0.85)).toColor()
       ];
   late double _opacity = 0.0, _radius = 24.0, _squareDimension = 0.0, _squareRadius = 0.0, _textShadow = 0.0, _textFontSize = 0.0;

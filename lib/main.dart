@@ -1,12 +1,15 @@
 import 'dart:html';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slide_puzzle_by_ercan/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/numbermode.dart';
+import 'package:slide_puzzle_by_ercan/experimentmode.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
@@ -66,6 +69,25 @@ class _MyAppState extends State<MyApp> {
               statusBarColor: Colors.transparent,
               systemNavigationBarColor: Colors.transparent,
             ),
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const ExperimentMode())).then((value) {
+                SharedPreferences.getInstance().then((SharedPreferences _sp) {
+                  if (_sp.getInt('_bestScore') != null) {
+                    _bestScore = _sp.getInt('_bestScore')!;
+                  }
+                  setState(() {});
+                });
+              });
+              document.documentElement?.requestFullscreen();
+            },
+            icon: const Icon(CupertinoIcons.lab_flask_solid),
+            label: const Text(
+              'EXPERIMENTAL MODE\n(You may experience low performance)',
+              textAlign: TextAlign.center,
+            ),
+            extendedTextStyle: const TextStyle(letterSpacing: 0.0),
           ),
           body: Row(
             mainAxisAlignment: MainAxisAlignment.center,
