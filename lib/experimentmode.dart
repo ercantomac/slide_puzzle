@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/gestures/events.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:slide_puzzle_by_ercan/experimentmode_2.dart';
 
 class ExperimentMode extends StatefulWidget {
-  const ExperimentMode({Key? key}) : super(key: key);
+  const ExperimentMode(/*this._displayAd, */ {Key? key}) : super(key: key);
+  //final Function _displayAd;
   @override
   State<ExperimentMode> createState() => _ExperimentModeState();
 }
@@ -228,24 +231,18 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
     });
     _blankPosition[0] = 3;
     _blankPosition[1] = 3;
+    int cnt = 0;
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         _margins[i][j].value[0] = (j * _movement).toInt();
         _margins[i][j].value[1] = (i * _movement).toInt();
-        _margins[i][j].notifyListeners();
-      }
-    }
-    int cnt = 0;
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < _margins[i].length; j++) {
         if (((j + 1) + (i * 4)) == _items[i][j]) {
           _margins[i][j].value[2] = 1;
-          _margins[i][j].notifyListeners();
           cnt++;
         } else {
           _margins[i][j].value[2] = 0;
-          _margins[i][j].notifyListeners();
         }
+        _margins[i][j].notifyListeners();
       }
     }
     Timer(const Duration(milliseconds: 300), () {
@@ -447,6 +444,7 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                 }
               }
               Timer(const Duration(milliseconds: 800), () {
+                //widget._displayAd();
                 double radius = (_size / 40);
                 /*setState(() {
                   _size = 0;
@@ -524,7 +522,8 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode()));
+                                        Navigator.of(context)
+                                            .pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode(/*widget._displayAd*/)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -718,14 +717,32 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                 centerTitle: true,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
-                actions: <IconButton>[
-                  IconButton(
+                actions: <TextButton>[
+                  /*TextButton.icon(
+                    icon: Icon(
+                      CupertinoIcons.lab_flask_solid,
+                      color: _complement,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => ExperimentMode2(widget._displayAd)));
+                    },
+                    label: Text(
+                      'CHANGE\nMODE',
+                      style: TextStyle(color: _complement),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),*/
+                  TextButton.icon(
                     icon: Icon(
                       (_medium == Colors.grey.shade900) ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
                       color: _complement,
                     ),
                     onPressed: () => _changeTheme(),
-                    tooltip: 'Change Theme',
+                    label: Text(
+                      (_medium == Colors.grey.shade900) ? 'Dark\nTheme' : 'Light\nTheme',
+                      style: TextStyle(color: _complement),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
@@ -928,6 +945,18 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                         tooltip: 'Restart',
                         child: const Icon(Icons.refresh_rounded, size: 42.0),
                       ),
+                    ),
+                  ),
+                  FloatingActionButton.extended(
+                    heroTag: 'experiment',
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode2(/*widget._displayAd*/)));
+                    },
+                    icon: const Icon(CupertinoIcons.lab_flask_solid),
+                    label: const Text(
+                      'CHANGE\nMODE',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(letterSpacing: 0.0),
                     ),
                   ),
                 ],

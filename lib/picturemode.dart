@@ -13,8 +13,9 @@ class MyRoute extends MaterialPageRoute {
 }
 
 class PictureMode extends StatefulWidget {
+  const PictureMode(this._picture, /*this._displayAd, */ {Key? key}) : super(key: key);
   final int _picture;
-  const PictureMode(this._picture, {Key? key}) : super(key: key);
+  //final Function _displayAd;
   @override
   State<PictureMode> createState() => _PictureModeState();
 }
@@ -154,21 +155,25 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
     });
     _blankPosition[0] = 3;
     _blankPosition[1] = 3;
+    int cnt = 0;
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         _margins[i][j].value[0] = (j * _movement).toInt();
         _margins[i][j].value[1] = (i * _movement).toInt();
+        if (((j + 1) + (i * 4)) == _items[i][j]) {
+          cnt++;
+        }
         _margins[i][j].notifyListeners();
       }
     }
-    int cnt = 0;
+    /*int cnt = 0;
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         if (((j + 1) + (i * 4)) == _items[i][j]) {
           cnt++;
         }
       }
-    }
+    }*/
     Timer(const Duration(milliseconds: 300), () {
       _inPosition.value = cnt;
       _moveCnt.value = 0;
@@ -343,6 +348,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                 _originalImgAlignment = Alignment.center;
               });
               Timer(const Duration(milliseconds: 1400), () {
+                //widget._displayAd();
                 showGeneralDialog(
                   pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
                     return WillPopScope(
@@ -418,7 +424,8 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => PictureMode(widget._picture)));
+                                        Navigator.of(context)
+                                            .pushReplacement(MyRoute(builder: (BuildContext context) => PictureMode(widget._picture /*, widget._displayAd*/)));
                                       });
                                     },
                                     style: TextButton.styleFrom(

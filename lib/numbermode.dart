@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NumberMode extends StatefulWidget {
-  const NumberMode({Key? key}) : super(key: key);
+  const NumberMode(/*this._displayAd, */ {Key? key}) : super(key: key);
+  //final Function _displayAd;
   @override
   State<NumberMode> createState() => _NumberModeState();
 }
@@ -222,21 +223,25 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
     });
     _blankPosition[0] = 3;
     _blankPosition[1] = 3;
+    int cnt = 0;
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         _margins[i][j].value[0] = (j * _movement).toInt();
         _margins[i][j].value[1] = (i * _movement).toInt();
+        if (((j + 1) + (i * 4)) == _items[i][j]) {
+          cnt++;
+        }
         _margins[i][j].notifyListeners();
       }
     }
-    int cnt = 0;
+    /*int cnt = 0;
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         if (((j + 1) + (i * 4)) == _items[i][j]) {
           cnt++;
         }
       }
-    }
+    }*/
     Timer(const Duration(milliseconds: 300), () {
       _inPosition.value = cnt;
       _moveCnt.value = 0;
@@ -431,6 +436,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                 }
               }
               Timer(const Duration(milliseconds: 800), () {
+                //widget._displayAd();
                 double radius = (_size / 40);
                 /*setState(() {
                   _size = 0;
@@ -508,7 +514,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const NumberMode()));
+                                        Navigator.of(context)
+                                            .pushReplacement(MyRoute(builder: (BuildContext context) => const NumberMode(/*widget._displayAd*/)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -702,14 +709,26 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                 centerTitle: true,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
-                actions: <IconButton>[
-                  IconButton(
+                actions: <TextButton>[
+                  /*IconButton(
                     icon: Icon(
                       (_medium == Colors.grey.shade900) ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
                       color: _complement,
                     ),
                     onPressed: () => _changeTheme(),
                     tooltip: 'Change Theme',
+                  ),*/
+                  TextButton.icon(
+                    icon: Icon(
+                      (_medium == Colors.grey.shade900) ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+                      color: _complement,
+                    ),
+                    onPressed: () => _changeTheme(),
+                    label: Text(
+                      (_medium == Colors.grey.shade900) ? 'Dark\nTheme' : 'Light\nTheme',
+                      style: TextStyle(color: _complement),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),

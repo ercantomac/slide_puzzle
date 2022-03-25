@@ -1,17 +1,21 @@
 import 'dart:html';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slide_puzzle_by_ercan/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/numbermode.dart';
 import 'package:slide_puzzle_by_ercan/experimentmode.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:slide_puzzle_by_ercan/ad_helper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  //MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -26,6 +30,68 @@ class _MyAppState extends State<MyApp> {
   final ValueNotifier<EdgeInsetsGeometry> _margin1 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0));
   final ValueNotifier<EdgeInsetsGeometry> _margin2 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 16.0));
   late int _bestScore = -1;
+  /*late InterstitialAd? _interstitialAd;
+  late bool _isInterstitialAdReady = false;
+  late int _numInterstitialLoadAttempts = 0;
+
+  void _loadInterstitialAd(bool shouldShow) {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _numInterstitialLoadAttempts = 0;
+          _interstitialAd = ad;
+          ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
+            onAdShowedFullScreenContent: (InterstitialAd ad) => print('$ad onAdShowedFullScreenContent.'),
+            onAdDismissedFullScreenContent: (InterstitialAd ad) {
+              print('$ad onAdDismissedFullScreenContent.');
+              ad.dispose();
+              //_isInterstitialAdReady = false; //??
+              //_interstitialAd = null; // ??
+              _loadInterstitialAd(false); // ??
+            },
+            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+              print('$ad onAdFailedToShowFullScreenContent: $error');
+              ad.dispose();
+              //_isInterstitialAdReady = false; //??
+              //_interstitialAd = null; // ??
+              _loadInterstitialAd(false); // ??
+            },
+            onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
+          );
+          _isInterstitialAdReady = true;
+          //_interstitialAd?.setImmersiveMode(true); // ??
+          if (shouldShow) {
+            _interstitialAd?.show();
+            _isInterstitialAdReady = false; // ??
+            _interstitialAd = null; // ??
+          }
+        },
+        onAdFailedToLoad: (LoadAdError err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+          _interstitialAd = null; // ??
+          _numInterstitialLoadAttempts++; // ??
+          if (_numInterstitialLoadAttempts < 4) {
+            _loadInterstitialAd(true); // ??
+          }
+        },
+      ),
+    );
+  }
+
+  void _displayAd() {
+    if (!_isInterstitialAdReady) {
+      print('ad not ready');
+      _loadInterstitialAd(true);
+    } else {
+      print('ad ready');
+      _interstitialAd?.show();
+      _isInterstitialAdReady = false; // ??
+      _interstitialAd = null; // ??
+    }
+  }*/
 
   @override
   void initState() {
@@ -36,7 +102,16 @@ class _MyAppState extends State<MyApp> {
       }
       setState(() {});
     });
+    /*if (!kIsWeb) {
+      _loadInterstitialAd(false);
+    }*/
   }
+
+  /*@override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +146,9 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           floatingActionButton: FloatingActionButton.extended(
+            heroTag: 'experiment',
             onPressed: () {
-              Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const ExperimentMode())).then((value) {
+              Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const ExperimentMode(/*_displayAd*/))).then((value) {
                 SharedPreferences.getInstance().then((SharedPreferences _sp) {
                   if (_sp.getInt('_bestScore') != null) {
                     _bestScore = _sp.getInt('_bestScore')!;
@@ -111,7 +187,7 @@ class _MyAppState extends State<MyApp> {
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                         onTap: () {
-                          Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const NumberMode())).then((value) {
+                          Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const NumberMode(/*_displayAd*/))).then((value) {
                             SharedPreferences.getInstance().then((SharedPreferences _sp) {
                               if (_sp.getInt('_bestScore') != null) {
                                 _bestScore = _sp.getInt('_bestScore')!;
@@ -192,7 +268,7 @@ class _MyAppState extends State<MyApp> {
                       ),
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                        onTap: () => Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const PicSelector())),
+                        onTap: () => Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const PicSelector(/*_displayAd*/))),
                         onHover: (bool a) {
                           if (a) {
                             _margin1.value = const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0);
