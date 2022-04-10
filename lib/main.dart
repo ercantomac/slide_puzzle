@@ -8,8 +8,9 @@ import 'package:slide_puzzle_by_ercan/picselector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/numbermode.dart';
 import 'package:slide_puzzle_by_ercan/experimentmode.dart';
+
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:slide_puzzle_by_ercan/ad_helper.dart';
+//import 'package:slide_puzzle_by_ercan/ad_helper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,11 +31,12 @@ class _MyAppState extends State<MyApp> {
   final ValueNotifier<EdgeInsetsGeometry> _margin1 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0));
   final ValueNotifier<EdgeInsetsGeometry> _margin2 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 16.0));
   late int _bestScore = -1;
+
   /*late InterstitialAd? _interstitialAd;
   late bool _isInterstitialAdReady = false;
-  late int _numInterstitialLoadAttempts = 0;
+  late int _numInterstitialLoadAttempts = 0;*/
 
-  void _loadInterstitialAd(bool shouldShow) {
+  /*void _loadInterstitialAd(bool shouldShow) {
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
       request: const AdRequest(),
@@ -92,6 +94,7 @@ class _MyAppState extends State<MyApp> {
       _interstitialAd = null; // ??
     }
   }*/
+  void _displayAd() {}
 
   @override
   void initState() {
@@ -118,6 +121,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Slide Puzzle by Ercan',
       color: Colors.grey.shade900,
+      //scrollBehavior: const ScrollBehavior(androidOverscrollIndicator: AndroidOverscrollIndicator.stretch),
       darkTheme: ThemeData(
         fontFamily: 'Manrope',
         brightness: Brightness.dark,
@@ -148,7 +152,7 @@ class _MyAppState extends State<MyApp> {
           floatingActionButton: FloatingActionButton.extended(
             heroTag: 'experiment',
             onPressed: () {
-              Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const ExperimentMode(/*_displayAd*/))).then((value) {
+              Navigator.of(context).push(MyRoute(builder: (BuildContext context) => ExperimentMode(_displayAd))).then((value) {
                 SharedPreferences.getInstance().then((SharedPreferences _sp) {
                   if (_sp.getInt('_bestScore') != null) {
                     _bestScore = _sp.getInt('_bestScore')!;
@@ -187,7 +191,7 @@ class _MyAppState extends State<MyApp> {
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                         onTap: () {
-                          Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const NumberMode(/*_displayAd*/))).then((value) {
+                          Navigator.of(context).push(MyRoute(builder: (BuildContext context) => NumberMode(_displayAd))).then((value) {
                             SharedPreferences.getInstance().then((SharedPreferences _sp) {
                               if (_sp.getInt('_bestScore') != null) {
                                 _bestScore = _sp.getInt('_bestScore')!;
@@ -268,7 +272,7 @@ class _MyAppState extends State<MyApp> {
                       ),
                       child: InkWell(
                         borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                        onTap: () => Navigator.of(context).push(MyRoute(builder: (BuildContext context) => const PicSelector(/*_displayAd*/))),
+                        onTap: () => Navigator.of(context).push(MyRoute(builder: (BuildContext context) => PicSelector(_displayAd))),
                         onHover: (bool a) {
                           if (a) {
                             _margin1.value = const EdgeInsets.fromLTRB(48.0, 48.0, 24.0, 48.0);
@@ -323,6 +327,7 @@ class _MyAppState extends State<MyApp> {
 
 class MyRoute extends MaterialPageRoute {
   MyRoute({dynamic builder}) : super(builder: builder);
+
   @override
   Duration get transitionDuration => const Duration(seconds: 1);
 }

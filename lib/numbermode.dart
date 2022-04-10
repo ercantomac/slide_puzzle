@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/gestures/events.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +8,17 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NumberMode extends StatefulWidget {
-  const NumberMode(/*this._displayAd, */ {Key? key}) : super(key: key);
-  //final Function _displayAd;
+  const NumberMode(this._displayAd, {Key? key}) : super(key: key);
+  final Function _displayAd;
+
   @override
   State<NumberMode> createState() => _NumberModeState();
 }
 
-class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
+class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin, WidgetsBindingObserver {
   late Color _medium = Colors.grey.shade900, _complement = Colors.white;
   final StreamController<int> _chronometer = StreamController<int>();
-  late int _colorCnt, _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0, _centerSquareDimension = 0;
+  late int _colorCnt, _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0, _centerSquareDimension = 0, _squareDimension = 0;
   final ValueNotifier<int> _moveCnt = ValueNotifier<int>(0), _inPosition = ValueNotifier<int>(0);
   final List<Color> _colors = <Color>[
         Colors.redAccent.shade400,
@@ -26,7 +28,6 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         Colors.pinkAccent.shade400,
         Colors.purpleAccent.shade400,
         Colors.greenAccent.shade400,
-        //Colors.pink.shade400,
         Colors.tealAccent.shade400,
         const Color(0xFFFF9100)
       ],
@@ -38,11 +39,10 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         HSLColor.fromColor(Colors.pinkAccent.shade400).withLightness(HSLColor.fromColor(Colors.pinkAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(Colors.purpleAccent.shade400).withLightness(HSLColor.fromColor(Colors.purpleAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(Colors.greenAccent.shade400).withLightness(HSLColor.fromColor(Colors.greenAccent.shade400).lightness * (0.85)).toColor(),
-        //HSLColor.fromColor(Colors.pink.shade400).withLightness(HSLColor.fromColor(Colors.pink.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(Colors.tealAccent.shade400).withLightness(HSLColor.fromColor(Colors.tealAccent.shade400).lightness * (0.85)).toColor(),
         HSLColor.fromColor(const Color(0xFFFF9100)).withLightness(HSLColor.fromColor(const Color(0xFFFF9100)).lightness * (0.85)).toColor()
       ];
-  late double _opacity = 0.0, _radius = 24.0, _squareDimension = 0.0, _squareRadius = 0.0, _textShadow = 0.0, _textFontSize = 0.0;
+  late double _opacity = 0.0, _radius = 24.0, _squareRadius = 0.0, _textShadow = 0.0, _textFontSize = 0.0;
   final List<int> _blankPosition = <int>[3, 3], _inversionControl = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   final List<List<int>> _items = <List<int>>[
     <int>[0, 0, 0, 0],
@@ -52,27 +52,27 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
   ];
   final List<List<ValueNotifier<List<int>>>> _margins = <List<ValueNotifier<List<int>>>>[
     <ValueNotifier<List<int>>>[
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0])
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0])
     ],
     <ValueNotifier<List<int>>>[
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0])
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0])
     ],
     <ValueNotifier<List<int>>>[
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0])
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0])
     ],
     <ValueNotifier<List<int>>>[
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0]),
-      ValueNotifier<List<int>>(<int>[0, 0])
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0]),
+      ValueNotifier<List<int>>(<int>[0, 0, 0])
     ],
   ];
   late SharedPreferences _sp;
@@ -129,7 +129,12 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < _margins[i].length; j++) {
         if (((j + 1) + (i * 4)) == _items[i][j]) {
+          _margins[i][j].value[2] = 1;
+          _margins[i][j].notifyListeners();
           cnt++;
+        } else {
+          _margins[i][j].value[2] = 0;
+          _margins[i][j].notifyListeners();
         }
       }
     }
@@ -137,6 +142,9 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
     _chronometer.add(_chronometerValue);
     WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
       Timer(const Duration(milliseconds: 600), () {
+        setState(() {
+          _opacity = 1.0;
+        });
         for (int i = 0; i < 4; i++) {
           for (int j = 0; j < _margins[i].length; j++) {
             _margins[i][j].value[0] = (j * _movement).toInt();
@@ -144,12 +152,86 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
             _margins[i][j].notifyListeners();
           }
         }
-        setState(() {
-          _opacity = 1.0;
-        });
         _resumeChronometer();
       });
     });
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      //PAUSE THE GAME
+      _timer.cancel();
+      showGeneralDialog(
+        barrierDismissible: true,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
+          return WillPopScope(
+            onWillPop: () async {
+              _resumeChronometer();
+              return true;
+            },
+            child: AlertDialog(
+              backgroundColor: _medium,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_radius)),
+                side: BorderSide(color: _colors[_colorCnt]),
+              ),
+              content: SingleChildScrollView(
+                child: Text('Game Paused', textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0, color: _complement)),
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <TextButton>[
+                    TextButton(
+                        onPressed: () => Navigator.of(context).popUntil((Route route) => route.isFirst),
+                        style: TextButton.styleFrom(
+                          primary: _complement,
+                          backgroundColor: _colors[_colorCnt],
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'QUIT',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _resumeChronometer();
+                        },
+                        style: TextButton.styleFrom(
+                          primary: _complement,
+                          backgroundColor: _colors[_colorCnt],
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'RESUME',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        context: context,
+        useRootNavigator: true,
+        transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
+            child: ScaleTransition(
+              scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
+              alignment: Alignment.bottomCenter,
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      );
+    }
   }
 
   void _changeTheme() async {
@@ -219,7 +301,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
       }
     }
     setState(() {
-      _squareDimension /= 1.25;
+      _squareDimension = (_squareDimension ~/ 1.25);
     });
     _blankPosition[0] = 3;
     _blankPosition[1] = 3;
@@ -229,7 +311,10 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         _margins[i][j].value[0] = (j * _movement).toInt();
         _margins[i][j].value[1] = (i * _movement).toInt();
         if (((j + 1) + (i * 4)) == _items[i][j]) {
+          _margins[i][j].value[2] = 1;
           cnt++;
+        } else {
+          _margins[i][j].value[2] = 0;
         }
         _margins[i][j].notifyListeners();
       }
@@ -251,7 +336,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
       _resumeChronometer();
       _player.play();
       setState(() {
-        _squareDimension *= 1.25;
+        _squareDimension = (_squareDimension * 1.25).toInt();
       });
       Timer(const Duration(milliseconds: 1800), () {
         setState(() {
@@ -271,6 +356,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
         _margins[i][j].dispose();
       }
     }
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   void _changeColor() async {
@@ -384,7 +470,12 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                           ? 3
                           : -1;
           if (((_column + 1) + (_row * 4)) == _items[i][j]) {
+            _margins[i][j].value[2] = 1;
+            _margins[i][j].notifyListeners();
             cnt++;
+          } else {
+            _margins[i][j].value[2] = 0;
+            _margins[i][j].notifyListeners();
           }
         }
       }
@@ -436,7 +527,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                 }
               }
               Timer(const Duration(milliseconds: 800), () {
-                //widget._displayAd();
+                widget._displayAd();
                 double radius = (_size / 40);
                 /*setState(() {
                   _size = 0;
@@ -514,8 +605,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context)
-                                            .pushReplacement(MyRoute(builder: (BuildContext context) => const NumberMode(/*widget._displayAd*/)));
+                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => NumberMode(widget._displayAd)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -573,11 +663,14 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
       if (MediaQuery.of(context).size.aspectRatio <= 1) {
         _size = (_size * sqrt(sqrt(sqrt(MediaQuery.of(context).size.aspectRatio)))).floor();
       } else {
-        _size = (_size / sqrt(MediaQuery.of(context).size.aspectRatio)).floor();
+        //_size = (_size / sqrt(MediaQuery.of(context).size.aspectRatio)).floor();
+        _size = ((_size / sqrt(MediaQuery.of(context).size.aspectRatio)) / 1.25).floor();
       }
-      _movement = _size ~/ 6;
+      //_movement = _size ~/ 6;
+      _movement = _size ~/ 5.5;
       _radius = _size / 40;
-      _squareDimension = _movement - (_size / 120);
+      //_squareDimension = _movement - (_size / 120);
+      _squareDimension = (_movement - (_movement / 20)).toInt();
       _squareRadius = _size / 80;
       _textShadow = _size / 384;
       _textFontSize = _size / 12;
@@ -710,14 +803,6 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
                 actions: <TextButton>[
-                  /*IconButton(
-                    icon: Icon(
-                      (_medium == Colors.grey.shade900) ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
-                      color: _complement,
-                    ),
-                    onPressed: () => _changeTheme(),
-                    tooltip: 'Change Theme',
-                  ),*/
                   TextButton.icon(
                     icon: Icon(
                       (_medium == Colors.grey.shade900) ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
@@ -775,13 +860,14 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                   style: TextStyle(
                                     fontSize: _textFontSize / 2.5,
                                     color: _complement,
-                                    shadows: <Shadow>[
+                                    fontWeight: FontWeight.w600,
+                                    /*shadows: <Shadow>[
                                       Shadow(
                                         color: Colors.black38,
                                         offset: Offset(0.0, (_textShadow / (1.5))),
                                         blurRadius: _textShadow,
                                       ),
-                                    ],
+                                    ],*/
                                   ),
                                 );
                               },
@@ -824,7 +910,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                             setState(() {
-                                              _centerSquareDimension = (_size * 83) ~/ 120;
+                                              //_centerSquareDimension = (_size * 83) ~/ 120;
+                                              _centerSquareDimension = (_movement * 83) ~/ 20;
                                             });
                                             Timer(const Duration(milliseconds: 600), () => _shuffle());
                                           },
@@ -933,8 +1020,8 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                               curve: (_centerSquareDimension == 0 && _inPosition.value != 15)
                                                   ? Curves.fastLinearToSlowEaseIn
                                                   : Curves.linearToEaseOut,
-                                              width: _squareDimension,
-                                              height: _squareDimension,
+                                              width: _squareDimension.toDouble(),
+                                              height: _squareDimension.toDouble(),
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.all(Radius.circular(_squareRadius)),
                                                 gradient: LinearGradient(
@@ -944,42 +1031,46 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
                                                 ),
                                               ),
                                               margin: EdgeInsets.fromLTRB(value[0].toDouble(), value[1].toDouble(), 0.0, 0.0),
-                                              child: child,
+                                              child: MouseRegion(
+                                                onEnter: (PointerEnterEvent event) {
+                                                  _hoverSize[i][j].value = 1.25;
+                                                },
+                                                onExit: (PointerExitEvent event) {
+                                                  _hoverSize[i][j].value = 1.0;
+                                                },
+                                                child: Center(
+                                                  child: ValueListenableBuilder<double>(
+                                                      valueListenable: _hoverSize[i][j],
+                                                      builder: (BuildContext context, double value2, Widget? child) {
+                                                        return AnimatedScale(
+                                                          duration: const Duration(milliseconds: 300),
+                                                          curve: (_inPosition.value != 15) ? Curves.linearToEaseOut : Curves.easeInOut,
+                                                          scale: (value[2] == 1) ? 1.1 : value2,
+                                                          child: Text(
+                                                            '${_items[i][j]}',
+                                                            style: TextStyle(
+                                                              fontSize: _textFontSize,
+                                                              color: (value[2] == 1)
+                                                                  ? HSLColor.fromColor(_colors[_colorCnt])
+                                                                      .withLightness(HSLColor.fromColor(_colors[_colorCnt]).lightness * (1.35))
+                                                                      .toColor()
+                                                                  : ((_medium == Colors.grey.shade900) ? Colors.grey.shade800 : _medium),
+                                                              fontWeight: (value[2] == 1) ? FontWeight.w600 : FontWeight.normal,
+                                                              shadows: <Shadow>[
+                                                                Shadow(
+                                                                  color: Colors.black38,
+                                                                  offset: Offset(_textShadow, _textShadow),
+                                                                  blurRadius: (_textShadow * (1.2)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }),
+                                                ),
+                                              ),
                                             );
                                           },
-                                          child: MouseRegion(
-                                            onEnter: (PointerEnterEvent event) {
-                                              _hoverSize[i][j].value = 1.25;
-                                            },
-                                            onExit: (PointerExitEvent event) {
-                                              _hoverSize[i][j].value = 1.0;
-                                            },
-                                            child: Center(
-                                              child: ValueListenableBuilder<double>(
-                                                  valueListenable: _hoverSize[i][j],
-                                                  builder: (BuildContext context, double value, Widget? child) {
-                                                    return AnimatedScale(
-                                                      duration: const Duration(milliseconds: 300),
-                                                      curve: (_inPosition.value != 15) ? Curves.linearToEaseOut : Curves.easeInOut,
-                                                      scale: value,
-                                                      child: Text(
-                                                        '${_items[i][j]}',
-                                                        style: TextStyle(
-                                                          fontSize: _textFontSize,
-                                                          color: (_medium == Colors.grey.shade900) ? Colors.grey.shade800 : _medium,
-                                                          shadows: <Shadow>[
-                                                            Shadow(
-                                                              color: Colors.black38,
-                                                              offset: Offset(_textShadow, _textShadow),
-                                                              blurRadius: _textShadow * (1.2),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }),
-                                            ),
-                                          ),
                                         ),
                                       ),
                                     ),
@@ -1019,6 +1110,7 @@ class _NumberModeState extends State<NumberMode> with TickerProviderStateMixin {
 
 class MyRoute extends MaterialPageRoute {
   MyRoute({dynamic builder}) : super(builder: builder);
+
   @override
   Duration get transitionDuration => const Duration(seconds: 1);
 }

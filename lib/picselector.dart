@@ -11,8 +11,8 @@ class MyRoute extends MaterialPageRoute {
 }
 
 class PicSelector extends StatefulWidget {
-  const PicSelector(/*this._displayAd, */ {Key? key}) : super(key: key);
-  //final Function _displayAd;
+  const PicSelector(this._displayAd, {Key? key}) : super(key: key);
+  final Function _displayAd;
   @override
   _PicSelectorState createState() => _PicSelectorState();
 }
@@ -63,7 +63,7 @@ class _PicSelectorState extends State<PicSelector> {
                   highlightColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   onTap: () {
-                    Navigator.of(context).push(MyRoute(builder: (BuildContext context) => PictureMode(i /*, widget._displayAd*/))).then((value) {
+                    Navigator.of(context).push(MyRoute(builder: (BuildContext context) => PictureMode(i, widget._displayAd))).then((value) {
                       SharedPreferences.getInstance().then((SharedPreferences _sp) {
                         for (int i = 0; i < 4; i++) {
                           if (_sp.getInt('_pic${(i + 1)}BestScore') != null) {

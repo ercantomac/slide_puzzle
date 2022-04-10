@@ -9,13 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/experimentmode_2.dart';
 
 class ExperimentMode extends StatefulWidget {
-  const ExperimentMode(/*this._displayAd, */ {Key? key}) : super(key: key);
-  //final Function _displayAd;
+  const ExperimentMode(this._displayAd, {Key? key}) : super(key: key);
+  final Function _displayAd;
   @override
   State<ExperimentMode> createState() => _ExperimentModeState();
 }
 
-class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStateMixin {
+class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStateMixin, WidgetsBindingObserver {
   late Color _medium = Colors.grey.shade900, _complement = Colors.white;
   final StreamController<int> _chronometer = StreamController<int>();
   late int _colorCnt, _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0;
@@ -158,6 +158,83 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
         _resumeChronometer();
       });
     });
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      //PAUSE THE GAME
+      _timer.cancel();
+      showGeneralDialog(
+        barrierDismissible: true,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
+          return WillPopScope(
+            onWillPop: () async {
+              _resumeChronometer();
+              return true;
+            },
+            child: AlertDialog(
+              backgroundColor: _medium,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_radius)),
+                side: BorderSide(color: _colors[_colorCnt]),
+              ),
+              content: SingleChildScrollView(
+                child: Text('Game Paused', textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0, color: _complement)),
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <TextButton>[
+                    TextButton(
+                        onPressed: () => Navigator.of(context).popUntil((Route route) => route.isFirst),
+                        style: TextButton.styleFrom(
+                          primary: _complement,
+                          backgroundColor: _colors[_colorCnt],
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'QUIT',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _resumeChronometer();
+                        },
+                        style: TextButton.styleFrom(
+                          primary: _complement,
+                          backgroundColor: _colors[_colorCnt],
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'RESUME',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        context: context,
+        useRootNavigator: true,
+        transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
+            child: ScaleTransition(
+              scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
+              alignment: Alignment.bottomCenter,
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      );
+    }
   }
 
   void _changeTheme() async {
@@ -274,6 +351,7 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
         _margins[i][j].dispose();
       }
     }
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   void _changeColor() async {
@@ -444,7 +522,7 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                 }
               }
               Timer(const Duration(milliseconds: 800), () {
-                //widget._displayAd();
+                widget._displayAd();
                 double radius = (_size / 40);
                 /*setState(() {
                   _size = 0;
@@ -522,8 +600,7 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context)
-                                            .pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode(/*widget._displayAd*/)));
+                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => ExperimentMode(widget._displayAd)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -950,7 +1027,7 @@ class _ExperimentModeState extends State<ExperimentMode> with TickerProviderStat
                   FloatingActionButton.extended(
                     heroTag: 'experiment',
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode2(/*widget._displayAd*/)));
+                      Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => ExperimentMode2(widget._displayAd)));
                     },
                     icon: const Icon(CupertinoIcons.lab_flask_solid),
                     label: const Text(

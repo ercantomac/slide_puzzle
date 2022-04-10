@@ -8,23 +8,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyRoute extends MaterialPageRoute {
   MyRoute({dynamic builder}) : super(builder: builder);
+
   @override
   Duration get transitionDuration => const Duration(seconds: 1);
 }
 
 class PictureMode extends StatefulWidget {
-  const PictureMode(this._picture, /*this._displayAd, */ {Key? key}) : super(key: key);
+  const PictureMode(this._picture, this._displayAd, {Key? key}) : super(key: key);
   final int _picture;
-  //final Function _displayAd;
+  final Function _displayAd;
+
   @override
   State<PictureMode> createState() => _PictureModeState();
 }
 
-class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin {
+class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin, WidgetsBindingObserver {
   final StreamController<int> _chronometer = StreamController<int>();
-  late int _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0, _centerSquareDimension = 0;
+  late int _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0, _centerSquareDimension = 0, _squareDimension = 0;
   final ValueNotifier<int> _moveCnt = ValueNotifier<int>(0), _inPosition = ValueNotifier<int>(0);
-  late double _opacity = 0.0, _radius = 24.0, _squareDimension = 0.0, _squareRadius = 0.0;
+  late double _opacity = 0.0, _radius = 24.0, _squareRadius = 0.0;
   final List<int> _blankPosition = <int>[3, 3], _inversionControl = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   final List<List<int>> _items = <List<int>>[
     <int>[0, 0, 0, 0],
@@ -109,6 +111,9 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
     _chronometer.add(_chronometerValue);
     WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
       Timer(const Duration(milliseconds: 800), () {
+        setState(() {
+          _opacity = 1.0;
+        });
         for (int i = 0; i < 4; i++) {
           for (int j = 0; j < _margins[i].length; j++) {
             _margins[i][j].value[0] = (j * _movement).toInt();
@@ -116,12 +121,88 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
             _margins[i][j].notifyListeners();
           }
         }
-        setState(() {
-          _opacity = 1.0;
-        });
         _resumeChronometer();
       });
     });
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      //PAUSE THE GAME
+      _timer.cancel();
+      showGeneralDialog(
+        barrierDismissible: true,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
+          return WillPopScope(
+            onWillPop: () async {
+              _resumeChronometer();
+              return true;
+            },
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_radius)),
+                side: BorderSide(color: Colors.grey.shade900),
+              ),
+              content: const SingleChildScrollView(
+                child: Text('Game Paused', textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0)),
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <TextButton>[
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.grey.shade900,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'QUIT',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _resumeChronometer();
+                        },
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.grey.shade900,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'RESUME',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        context: context,
+        useRootNavigator: true,
+        transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
+            child: ScaleTransition(
+              scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
+              alignment: Alignment.bottomCenter,
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      );
+    }
   }
 
   void _shuffle() async {
@@ -151,7 +232,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
       }
     }
     setState(() {
-      _squareDimension /= 1.25;
+      _squareDimension = (_squareDimension ~/ 1.25);
     });
     _blankPosition[0] = 3;
     _blankPosition[1] = 3;
@@ -183,7 +264,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
       _resumeChronometer();
       _player.play();
       setState(() {
-        _squareDimension *= 1.25;
+        _squareDimension = (_squareDimension * 1.25).toInt();
       });
       Timer(const Duration(milliseconds: 1800), () {
         setState(() {
@@ -203,6 +284,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
         _margins[i][j].dispose();
       }
     }
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   void _resumeChronometer() {
@@ -338,7 +420,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
               }
             }
             setState(() {
-              _squareDimension = _movement.toDouble();
+              _squareDimension = _movement /*.toDouble()*/;
               _radius = 0.0;
               _squareRadius = 0.0;
             });
@@ -348,7 +430,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                 _originalImgAlignment = Alignment.center;
               });
               Timer(const Duration(milliseconds: 1400), () {
-                //widget._displayAd();
+                widget._displayAd();
                 showGeneralDialog(
                   pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
                     return WillPopScope(
@@ -425,7 +507,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
                                         Navigator.of(context)
-                                            .pushReplacement(MyRoute(builder: (BuildContext context) => PictureMode(widget._picture /*, widget._displayAd*/)));
+                                            .pushReplacement(MyRoute(builder: (BuildContext context) => PictureMode(widget._picture, widget._displayAd)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -483,11 +565,14 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
       if (MediaQuery.of(context).size.aspectRatio <= 1) {
         _size = (_size * sqrt(sqrt(sqrt(MediaQuery.of(context).size.aspectRatio)))).floor();
       } else {
-        _size = (_size / sqrt(MediaQuery.of(context).size.aspectRatio)).floor();
+        //_size = (_size / sqrt(MediaQuery.of(context).size.aspectRatio)).floor();
+        _size = ((_size / sqrt(MediaQuery.of(context).size.aspectRatio)) / 1.25).floor();
       }
-      _movement = _size ~/ 6;
+      //_movement = _size ~/ 6;
+      _movement = _size ~/ 5.5;
       _radius = _size / 40;
-      _squareDimension = _movement - (_size / 120);
+      //_squareDimension = _movement - (_size / 120);
+      _squareDimension = (_movement - (_movement / 20)).toInt();
       _squareRadius = _size / 80;
       setState(() {});
     }
@@ -616,6 +701,7 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: _size / 30,
+                                  fontWeight: FontWeight.w600,
                                   shadows: <Shadow>[
                                     Shadow(
                                       color: Colors.black38,
@@ -663,7 +749,8 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                           setState(() {
-                                            _centerSquareDimension = (_size * 83) ~/ 120;
+                                            //_centerSquareDimension = (_size * 83) ~/ 120;
+                                            _centerSquareDimension = (_movement * 83) ~/ 20;
                                           });
                                           Timer(const Duration(milliseconds: 600), () {
                                             _shuffle();
@@ -788,8 +875,8 @@ class _PictureModeState extends State<PictureMode> with TickerProviderStateMixin
                                             curve: (_centerSquareDimension == 0 && _inPosition.value != 15)
                                                 ? Curves.fastLinearToSlowEaseIn
                                                 : Curves.linearToEaseOut,
-                                            width: _squareDimension,
-                                            height: _squareDimension,
+                                            width: _squareDimension.toDouble(),
+                                            height: _squareDimension.toDouble(),
                                             margin: EdgeInsets.fromLTRB(value[0].toDouble(), value[1].toDouble(), 0.0, 0.0),
                                             child: child,
                                           );

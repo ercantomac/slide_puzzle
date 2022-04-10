@@ -10,15 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/experimentmode.dart';
 
 class ExperimentMode2 extends StatefulWidget {
-  const ExperimentMode2(/*this._displayAd, */ {Key? key}) : super(key: key);
-  //final Function _displayAd;
+  const ExperimentMode2(this._displayAd, {Key? key}) : super(key: key);
+  final Function _displayAd;
   @override
   State<ExperimentMode2> createState() => _ExperimentMode2State();
 }
 
-class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderStateMixin {
+class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderStateMixin, WidgetsBindingObserver {
   final StreamController<int> _chronometer = StreamController<int>();
-  late int _colorCnt, _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0;
+  late int _bestScore = -1, _size = 960, _movement = 160, _chronometerValue = 0;
   final ValueNotifier<int> _moveCnt = ValueNotifier<int>(0), _inPosition = ValueNotifier<int>(0);
   late double _opacity = 0.0, _radius = 24.0, _squareDimension = 0.0, _squareRadius = 0.0, _textShadow = 0.0, _textFontSize = 0.0;
   final List<int> _blankPosition = <int>[3, 3], _inversionControl = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -130,6 +130,82 @@ class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderSt
         _resumeChronometer();
       });
     });
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      //PAUSE THE GAME
+      _timer.cancel();
+      showGeneralDialog(
+        barrierDismissible: true,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2) {
+          return WillPopScope(
+            onWillPop: () async {
+              _resumeChronometer();
+              return true;
+            },
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_radius)),
+                side: BorderSide(color: Colors.grey.shade900),
+              ),
+              content: const SingleChildScrollView(
+                child: Text('Game Paused', textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0)),
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <TextButton>[
+                    TextButton(
+                        onPressed: () => Navigator.of(context).popUntil((Route route) => route.isFirst),
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.grey.shade900,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'QUIT',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _resumeChronometer();
+                        },
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.grey.shade900,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(512.0))),
+                        ),
+                        child: const Text(
+                          'RESUME',
+                          style: TextStyle(fontFamily: 'Manrope'),
+                        )),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        context: context,
+        useRootNavigator: true,
+        transitionBuilder: (BuildContext context, Animation<double> anim1, Animation<double> anim2, Widget child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: Curves.easeInOut).drive(Tween<double>(begin: 0.15, end: 1.0)),
+            child: ScaleTransition(
+              scale: CurvedAnimation(parent: anim1, curve: Curves.easeInOutCubicEmphasized).drive(Tween<double>(begin: 0.0, end: 1.0)),
+              alignment: Alignment.bottomCenter,
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      );
+    }
   }
 
   void _shuffle() async {
@@ -206,6 +282,7 @@ class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderSt
         _margins[i][j].dispose();
       }
     }
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   void _resumeChronometer() {
@@ -366,7 +443,7 @@ class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderSt
                 }
               }
               Timer(const Duration(milliseconds: 800), () {
-                //widget._displayAd();
+                widget._displayAd();
                 double radius = (_size / 40);
                 /*setState(() {
                   _size = 0;
@@ -444,8 +521,7 @@ class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderSt
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       Timer(const Duration(milliseconds: 500), () {
-                                        Navigator.of(context)
-                                            .pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode2(/*widget._displayAd*/)));
+                                        Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => ExperimentMode2(widget._displayAd)));
                                       });
                                     },
                                     style: TextButton.styleFrom(
@@ -786,7 +862,7 @@ class _ExperimentMode2State extends State<ExperimentMode2> with TickerProviderSt
             FloatingActionButton.extended(
               heroTag: 'experiment',
               onPressed: () {
-                Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => const ExperimentMode(/*widget._displayAd*/)));
+                Navigator.of(context).pushReplacement(MyRoute(builder: (BuildContext context) => ExperimentMode(widget._displayAd)));
               },
               icon: const Icon(CupertinoIcons.lab_flask_solid),
               label: const Text(
