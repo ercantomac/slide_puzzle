@@ -9,14 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle_by_ercan/numbermode.dart';
 import 'package:slide_puzzle_by_ercan/experimentmode.dart';
 
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
-//import 'package:slide_puzzle_by_ercan/ad_helper.dart';
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  //MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -32,68 +28,6 @@ class _MyAppState extends State<MyApp> {
   final ValueNotifier<EdgeInsetsGeometry> _margin2 = ValueNotifier<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 16.0));
   late int _bestScore = -1;
 
-  /*late InterstitialAd? _interstitialAd;
-  late bool _isInterstitialAdReady = false;
-  late int _numInterstitialLoadAttempts = 0;*/
-
-  /*void _loadInterstitialAd(bool shouldShow) {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          _numInterstitialLoadAttempts = 0;
-          _interstitialAd = ad;
-          ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
-            onAdShowedFullScreenContent: (InterstitialAd ad) => print('$ad onAdShowedFullScreenContent.'),
-            onAdDismissedFullScreenContent: (InterstitialAd ad) {
-              print('$ad onAdDismissedFullScreenContent.');
-              ad.dispose();
-              //_isInterstitialAdReady = false; //??
-              //_interstitialAd = null; // ??
-              _loadInterstitialAd(false); // ??
-            },
-            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-              print('$ad onAdFailedToShowFullScreenContent: $error');
-              ad.dispose();
-              //_isInterstitialAdReady = false; //??
-              //_interstitialAd = null; // ??
-              _loadInterstitialAd(false); // ??
-            },
-            onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
-          );
-          _isInterstitialAdReady = true;
-          //_interstitialAd?.setImmersiveMode(true); // ??
-          if (shouldShow) {
-            _interstitialAd?.show();
-            _isInterstitialAdReady = false; // ??
-            _interstitialAd = null; // ??
-          }
-        },
-        onAdFailedToLoad: (LoadAdError err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
-          _interstitialAd = null; // ??
-          _numInterstitialLoadAttempts++; // ??
-          if (_numInterstitialLoadAttempts < 4) {
-            _loadInterstitialAd(true); // ??
-          }
-        },
-      ),
-    );
-  }
-
-  void _displayAd() {
-    if (!_isInterstitialAdReady) {
-      print('ad not ready');
-      _loadInterstitialAd(true);
-    } else {
-      print('ad ready');
-      _interstitialAd?.show();
-      _isInterstitialAdReady = false; // ??
-      _interstitialAd = null; // ??
-    }
-  }*/
   void _displayAd() {}
 
   @override
@@ -105,16 +39,7 @@ class _MyAppState extends State<MyApp> {
       }
       setState(() {});
     });
-    /*if (!kIsWeb) {
-      _loadInterstitialAd(false);
-    }*/
   }
-
-  /*@override
-  void dispose() {
-    _interstitialAd?.dispose();
-    super.dispose();
-  }*/
 
   @override
   Widget build(BuildContext context) {
