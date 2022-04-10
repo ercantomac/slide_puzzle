@@ -14,7 +14,6 @@ dependencies:
   cupertino_icons: ^1.0.4
   shared_preferences: ^2.0.12
   just_audio: ^0.9.20
-  google_mobile_ads: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^1.0.4
